@@ -248,7 +248,9 @@
     return s + desenha({ W, H, hz, r, R, k, pick, larg }) + '</svg>';
   }
   const capasCartao = new Map();
-  const capaCartao = w => { if (!capasCartao.has(w.id)) capasCartao.set(w.id, capa(w)); return capasCartao.get(w.id); };
+  // celular em grade (uma coluna): capa composta em paisagem 16:9, em vez de recortar a de 3:4
+  const capaLarga = matchMedia('(max-width: 520px)');
+  const capaCartao = (w, larga) => { const c = w.id + (larga ? ':larga' : ''); if (!capasCartao.has(c)) capasCartao.set(c, larga ? capa(w, 480, 270) : capa(w)); return capasCartao.get(c); };
 
   // Ícones dos temas (chips)
   const MINI = {
@@ -294,10 +296,10 @@
     return lista.sort((a, b) => b.ingresso - a.ingresso || NIVEIS.indexOf(a.nivel) - NIVEIS.indexOf(b.nivel) || RANK[a.status] - RANK[b.status] || porAutor(a, b));
   }
 
-  function cardHTML(w, i) {
+  function cardHTML(w, i, larga) {
     const tema = temaPorId[w.temas[0]];
     return `<li class="card st-${w.status}" data-id="${w.id}" style="--i:${Math.min(i, 18)}"><article>`
-      + `<div class="capa">${capaCartao(w)}<span class="selo nivel-${w.nivel === 'Doutorado' ? 'd' : 'm'}">${w.nivel}</span>${window.PPGEAN_IA?.tem(w.id) ? `<span class="selo-ia" title="Inclui simulação de como a IA pode ajudar">${icone('ia')}IA</span>` : ''}</div>`
+      + `<div class="capa">${capaCartao(w, larga)}<span class="selo nivel-${w.nivel === 'Doutorado' ? 'd' : 'm'}">${w.nivel}</span>${window.PPGEAN_IA?.tem(w.id) ? `<span class="selo-ia" title="Inclui simulação de como a IA pode ajudar">${icone('ia')}IA</span>` : ''}</div>`
       + `<div class="card-corpo"><p class="card-meta"><span class="meta-nivel">${w.nivel} · </span>Ingresso ${w.ingresso}${tema ? ` · ${esc(tema.rotulo)}` : ''}</p>`
       + `<h3 class="card-titulo"><a class="card-link" href="#/${w.id}">${w.titulo || `Título em definição<span class="sr-only"> · ${esc(w.autor)}</span>`}</a></h3>`
       + `<p class="card-autor">${esc(w.autor)}</p><p class="card-status s-${w.status}">${STATUS[w.status]}</p></div></article></li>`;
@@ -319,14 +321,22 @@
       grupos = [...m.values()];
     } else if (visiveis.length) grupos = [{ key: 'todos', titulo: 'Todos os projetos', sub: f.ordem === 'titulo' ? 'por título' : 'por autor', itens: visiveis }];
     let i = 0;
+    const larga = f.visao !== 'lista' && capaLarga.matches;
     elEstantes.classList.toggle('animar', animar);
     elEstantes.innerHTML = grupos.map(g => `<details class="estante" data-key="${g.key}"${fechadas.has(g.key) ? '' : ' open'}><summary>${icone('dir', 'estante-seta')}<h2>${esc(g.titulo)} <small>${g.sub}</small></h2><span class="estante-n">${g.itens.length}</span></summary>`
-      + `<ul class="grade${f.visao === 'lista' ? ' lista' : ''}">${g.itens.map(w => cardHTML(w, i++)).join('')}</ul></details>`).join('');
+      + `<ul class="grade${f.visao === 'lista' ? ' lista' : ''}">${g.itens.map(w => cardHTML(w, i++, larga)).join('')}</ul></details>`).join('');
     $('#vazio').hidden = visiveis.length > 0;
     const total = trabalhos.length;
     $('#contagem').innerHTML = visiveis.length === total ? `<strong>${total}</strong> projetos` : `<strong>${visiveis.length}</strong> de ${total} projetos`;
     $('#limpar').hidden = !(f.q || f.turma || f.nivel || f.resumo || f.temas.length);
+    // filtros escondidos atrás do botão (celular): mostra quantos estão ativos
+    const ativos = !!f.turma + !!f.nivel + f.resumo;
+    $('#filtros-n').hidden = !ativos;
+    $('#filtros-n').innerHTML = `${ativos}<span class="sr-only"> ativos</span>`;
   }
+  capaLarga.addEventListener('change', () => render());
+  const abrirFiltros = $('#filtros-abrir');
+  abrirFiltros.addEventListener('click', () => abrirFiltros.setAttribute('aria-expanded', form.classList.toggle('aberto')));
   // Filtros re-renderizam com a animação de entrada dos cards (sem View Transition: ela engolia cliques rápidos)
   form.addEventListener('change', e => {
     if (e.target.name === 'visao') store.set('visao', e.target.value);
@@ -339,7 +349,7 @@
     render(true);
     // o botão "Limpar filtros" some depois do clique: devolve o foco a um controle visível
     const f = document.activeElement;
-    if (!f || f === document.body || f.closest('[hidden]')) form.querySelector('input[name="turma"]:checked').focus();
+    if (!f || f === document.body || f.closest('[hidden]')) [form.querySelector('input[name="turma"]:checked'), abrirFiltros].find(el => el.offsetParent)?.focus();
   }));
   elEstantes.addEventListener('toggle', e => { const d = e.target; if (d.matches?.('details.estante')) { if (d.open) fechadas.delete(d.dataset.key); else fechadas.add(d.dataset.key); } }, true);
   function aplicarVisao() { const r = form.querySelector(`input[name="visao"][value="${store.get('visao') || 'grade'}"]`); if (r) r.checked = true; }

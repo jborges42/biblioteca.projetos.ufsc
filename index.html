@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Biblioteca de Projetos · PPGEAN · UFSC</title>
+<meta name="description" content="Biblioteca interativa dos projetos de dissertação e tese dos ingressantes de 2025 e 2026 do Programa de Pós-Graduação em Ecossistemas Agrícolas e Naturais (PPGEAN) da UFSC, campus Curitibanos.">
+<meta name="theme-color" content="#1659bf">
+<link rel="icon" href="assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&display=swap">
+<link rel="stylesheet" href="styles.css">
+<script>try{if(localStorage.getItem('ppgean:contraste')==='alto')document.documentElement.dataset.contraste='alto'}catch(e){}</script>
+</head>
+<body>
+<a class="pular" href="#biblioteca">Ir para a biblioteca</a>
+
+<header class="cabecalho">
+  <div class="faixa">
+    <nav class="barra-acess" aria-label="Acessibilidade">
+      <ul class="atalhos">
+        <li><a href="#biblioteca" accesskey="1">Ir para o conteúdo <kbd>1</kbd></a></li>
+        <li><a href="#busca" accesskey="3">Ir para a busca <kbd>3</kbd></a></li>
+        <li><a href="#rodape" accesskey="4">Ir para o rodapé <kbd>4</kbd></a></li>
+      </ul>
+      <ul class="ferramentas">
+        <li><a href="https://ufsc.br/acessibilidade/" accesskey="7">Acessibilidade</a></li>
+        <li><button type="button" id="btn-contraste" accesskey="8" aria-pressed="false">Alto contraste</button></li>
+      </ul>
+    </nav>
+    <div class="marca-linha">
+      <a class="marca" href="https://ppgean.ufsc.br/">
+        <img class="brasao" src="assets/brasao-ufsc.svg" alt="Brasão da UFSC" width="48" height="66">
+        <span class="marca-txt">
+          <span class="marca-ufsc">Universidade Federal de Santa Catarina</span>
+          <span class="marca-programa">Programa de Pós-Graduação em Ecossistemas Agrícolas e Naturais</span>
+        </span>
+      </a>
+      <img class="logo-ppgean" src="assets/ppgean-horizontal-branco.png" alt="PPGEAN" width="177" height="56">
+    </div>
+  </div>
+  <nav class="menu-faixa" aria-label="Páginas do PPGEAN">
+    <div class="faixa">
+      <ul>
+        <li><a href="https://ppgean.ufsc.br/">Início do PPGEAN</a></li>
+        <li><a href="https://ppgean.ufsc.br/projetos-de-dissertacao/projetos-de-dissertacao-ingressantes-em-20251/?lang=pb">Projetos · ingressantes 2025</a></li>
+        <li><a href="https://ppgean.ufsc.br/projetos-de-dissertacao/projetos-de-dissertacao-ingressantes-em-2026/?lang=pb">Projetos · ingressantes 2026</a></li>
+        <li><a href="https://curitibanos.ufsc.br/">Campus Curitibanos</a></li>
+      </ul>
+    </div>
+  </nav>
+</header>
+
+<section class="hero" aria-labelledby="hero-titulo">
+  <div class="faixa hero-grade">
+    <div class="hero-txt">
+      <p class="sobretitulo">Biblioteca de projetos · ingressantes 2025 e 2026</p>
+      <h1 id="hero-titulo">Pesquisas em ecossistemas agrícolas e naturais</h1>
+      <p class="hero-lead">Do campo nativo às araucárias, do solo às abelhas: explore os projetos de dissertação e tese em desenvolvimento no PPGEAN. Escolha uma capa para ler o resumo e gerar um QR&nbsp;Code que leva o trabalho a qualquer lugar.</p>
+      <div class="busca" role="search">
+        <label class="sr-only" for="busca">Buscar projetos</label>
+        <svg class="ico" aria-hidden="true"><use href="#i-busca"/></svg>
+        <input id="busca" name="q" form="filtros" type="search" placeholder="Busque por tema, título, autor, orientador…" autocomplete="off" spellcheck="false">
+        <kbd class="busca-atalho" aria-hidden="true">/</kbd>
+      </div>
+      <dl class="numeros" id="numeros"></dl>
+    </div>
+    <aside class="destaque" id="destaque" aria-label="Projeto em destaque"></aside>
+  </div>
+  <svg class="hero-paisagem" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+    <path d="M0 70 C180 30 300 90 480 62 S800 20 980 58 1260 96 1440 48 V120 H0Z" fill="#0f4098" opacity=".55"/>
+    <path d="M0 96 C220 70 380 112 620 90 S1000 64 1180 92 1340 104 1440 86 V120 H0Z" fill="#faf8f6"/>
+  </svg>
+</section>
+
+<main id="biblioteca" tabindex="-1">
+  <form id="filtros" class="filtros" aria-label="Filtros da biblioteca" onsubmit="return false">
+    <div class="faixa">
+      <div class="filtros-linha">
+        <fieldset class="segmentos">
+          <legend>Turma</legend>
+          <label><input type="radio" name="turma" value="" checked><span>Todas</span></label>
+          <label><input type="radio" name="turma" value="2026"><span>2026</span></label>
+          <label><input type="radio" name="turma" value="2025"><span>2025</span></label>
+        </fieldset>
+        <fieldset class="segmentos">
+          <legend>Nível</legend>
+          <label><input type="radio" name="nivel" value="" checked><span>Todos</span></label>
+          <label><input type="radio" name="nivel" value="Mestrado"><span>Mestrado</span></label>
+          <label><input type="radio" name="nivel" value="Doutorado"><span>Doutorado</span></label>
+        </fieldset>
+        <label class="interruptor"><input type="checkbox" name="resumo" role="switch"><span class="interruptor-trilho" aria-hidden="true"></span>Só com resumo</label>
+        <div class="filtros-direita">
+          <p id="contagem" aria-live="polite"></p>
+          <button type="reset" class="limpar" id="limpar" hidden>Limpar filtros</button>
+          <label class="ordenar"><span>Organizar</span>
+            <select name="ordem">
+              <option value="estantes">Por turma e nível</option>
+              <option value="titulo">Título (A–Z)</option>
+              <option value="autor">Autor (A–Z)</option>
+            </select>
+          </label>
+          <fieldset class="segmentos visao">
+            <legend class="sr-only">Visualização</legend>
+            <label title="Capas em grade"><input type="radio" name="visao" value="grade" checked><span><svg class="ico" aria-hidden="true"><use href="#i-grade"/></svg><span class="sr-only">Grade</span></span></label>
+            <label title="Lista compacta"><input type="radio" name="visao" value="lista"><span><svg class="ico" aria-hidden="true"><use href="#i-lista"/></svg><span class="sr-only">Lista</span></span></label>
+          </fieldset>
+        </div>
+      </div>
+      <fieldset class="temas">
+        <legend>Temas</legend>
+        <div class="chips-trilho">
+          <button type="button" class="rolar ant" tabindex="-1" aria-hidden="true" hidden><svg class="ico" aria-hidden="true"><use href="#i-esq"/></svg></button>
+          <div class="chips" id="chips-temas"></div>
+          <button type="button" class="rolar prox" tabindex="-1" aria-hidden="true" hidden><svg class="ico" aria-hidden="true"><use href="#i-dir"/></svg></button>
+        </div>
+      </fieldset>
+    </div>
+  </form>
+
+  <div class="faixa">
+    <div id="estantes" class="estantes"></div>
+    <div id="vazio" class="vazio" hidden>
+      <svg class="vazio-ico" aria-hidden="true"><use href="#i-busca"/></svg>
+      <h2>Nenhum projeto encontrado</h2>
+      <p>Tente outro termo de busca ou remova alguns filtros.</p>
+      <button type="reset" form="filtros" class="btn primario">Limpar filtros</button>
+    </div>
+  </div>
+</main>
+
+<footer class="rodape" id="rodape">
+  <div class="faixa rodape-grade">
+    <div>
+      <img src="assets/ppgean-horizontal-branco.png" alt="PPGEAN — Programa de Pós-Graduação em Ecossistemas Agrícolas e Naturais" width="220" height="70" loading="lazy">
+      <p class="rodape-desc">Os pinheiros, o campo nativo, os rios, o céu azul e o cultivo agrícola: a paisagem da Região Serrana de Santa Catarina inspira a identidade do programa — e as capas desta biblioteca.</p>
+    </div>
+    <div>
+      <h2>Contato</h2>
+      <address>
+        Rod. Ulysses Gaboardi, Km 3 · Caixa Postal 101<br>
+        Curitibanos – SC · CEP 89.520-000<br>
+        Coordenação: (48) 3721-2184<br>
+        <a href="mailto:ppgean@contato.ufsc.br">ppgean@contato.ufsc.br</a><br>
+        Secretaria: <a href="mailto:sipg.ppgean@contato.ufsc.br">sipg.ppgean@contato.ufsc.br</a>
+      </address>
+    </div>
+    <div>
+      <h2>Fonte dos dados</h2>
+      <ul>
+        <li><a href="https://ppgean.ufsc.br/projetos-de-dissertacao/projetos-de-dissertacao-ingressantes-em-20251/?lang=pb">Projetos dos ingressantes em 2025</a></li>
+        <li><a href="https://ppgean.ufsc.br/projetos-de-dissertacao/projetos-de-dissertacao-ingressantes-em-2026/?lang=pb">Projetos dos ingressantes em 2026</a></li>
+      </ul>
+      <p class="rodape-nota" id="nota-dados"></p>
+    </div>
+    <div>
+      <h2>Links UFSC</h2>
+      <ul>
+        <li><a href="https://ufsc.br/">UFSC</a></li>
+        <li><a href="https://curitibanos.ufsc.br/">Campus Curitibanos</a></li>
+        <li><a href="https://propg.ufsc.br/">Pró-Reitoria de Pós-Graduação</a></li>
+        <li><a href="https://portal.bu.ufsc.br/">Biblioteca Universitária</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="rodape-base">
+    <div class="faixa">Universidade Federal de Santa Catarina · Campus Curitibanos · PPGEAN</div>
+  </div>
+</footer>
+
+<dialog id="leitor" class="leitor" aria-labelledby="leitor-titulo">
+  <div class="leitor-rolagem" id="leitor-rolagem">
+    <header class="leitor-hero">
+      <div class="leitor-capa capa" id="leitor-capa"></div>
+      <div class="leitor-hero-txt">
+        <p class="leitor-selos" id="leitor-selos"></p>
+        <h2 id="leitor-titulo" tabindex="-1" autofocus></h2>
+        <p class="leitor-autor" id="leitor-autor"></p>
+      </div>
+    </header>
+    <div class="leitor-corpo">
+      <article class="leitor-texto" id="leitor-texto" aria-label="Resumo do projeto"></article>
+      <aside class="leitor-qr" aria-labelledby="qr-titulo">
+        <h3 id="qr-titulo"><svg class="ico" aria-hidden="true"><use href="#i-qr"/></svg> Acesso por QR&nbsp;Code</h3>
+        <fieldset class="segmentos qr-alvo" id="qr-alvo">
+          <legend class="sr-only">Para onde o QR Code leva</legend>
+          <label><input type="radio" name="qr-alvo" value="portfolio"><span>Esta biblioteca</span></label>
+          <label><input type="radio" name="qr-alvo" value="oficial"><span id="qr-rotulo-oficial">Fonte oficial</span></label>
+        </fieldset>
+        <div class="qr-caixa" id="qr-caixa"></div>
+        <p class="qr-url"><a id="qr-url" href="#" target="_blank" rel="noopener"></a></p>
+        <p class="qr-dica" id="qr-dica"></p>
+        <div class="qr-botoes">
+          <button type="button" class="btn" data-acao="copiar-qr"><svg class="ico" aria-hidden="true"><use href="#i-copiar"/></svg>Copiar QR</button>
+          <button type="button" class="btn" data-acao="baixar-qr"><svg class="ico" aria-hidden="true"><use href="#i-baixar"/></svg>Baixar PNG</button>
+          <button type="button" class="btn" data-acao="copiar-link"><svg class="ico" aria-hidden="true"><use href="#i-link"/></svg>Copiar link</button>
+          <button type="button" class="btn" data-acao="compartilhar" hidden><svg class="ico" aria-hidden="true"><use href="#i-compartilhar"/></svg>Compartilhar</button>
+          <button type="button" class="btn largo" data-acao="etiqueta"><svg class="ico" aria-hidden="true"><use href="#i-etiqueta"/></svg>Etiqueta para impressão</button>
+        </div>
+        <div class="leitor-fontes" id="leitor-fontes"></div>
+      </aside>
+    </div>
+  </div>
+  <nav class="leitor-nav" aria-label="Navegar entre projetos">
+    <button type="button" class="btn nav-ant" id="nav-ant"><svg class="ico" aria-hidden="true"><use href="#i-esq"/></svg><span>Anterior</span></button>
+    <span class="nav-pos" id="nav-pos"></span>
+    <button type="button" class="btn nav-prox" id="nav-prox"><span>Próximo</span><svg class="ico" aria-hidden="true"><use href="#i-dir"/></svg></button>
+  </nav>
+  <button type="button" class="leitor-fechar" id="leitor-fechar" aria-label="Fechar e voltar à biblioteca (Esc)"><svg class="ico" aria-hidden="true"><use href="#i-fechar"/></svg></button>
+</dialog>
+
+<div class="aviso" id="aviso" role="status" aria-live="polite"></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-busca" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="m20 20-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-grade" viewBox="0 0 24 24"><g fill="currentColor"><rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/></g></symbol>
+  <symbol id="i-lista" viewBox="0 0 24 24"><g fill="currentColor"><rect x="3" y="4" width="5" height="5" rx="1"/><rect x="10" y="5.5" width="11" height="2" rx="1"/><rect x="3" y="15" width="5" height="5" rx="1"/><rect x="10" y="16.5" width="11" height="2" rx="1"/></g></symbol>
+  <symbol id="i-fechar" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
+  <symbol id="i-esq" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-dir" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-qr" viewBox="0 0 24 24"><g fill="currentColor"><path d="M3 3h8v8H3zm2 2v4h4V5zM13 3h8v8h-8zm2 2v4h4V5zM3 13h8v8H3zm2 2v4h4v-4z"/><path d="M13 13h3v3h-3zm5 0h3v3h-3zm-5 5h3v3h-3zm5 0h3v3h-3zm-2.5-2.5h3v3h-3z"/></g></symbol>
+  <symbol id="i-copiar" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/></g></symbol>
+  <symbol id="i-baixar" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m-5-5 5 5 5-5M5 20h14"/></g></symbol>
+  <symbol id="i-etiqueta" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 10h5"/><rect x="9" y="13" width="6" height="5" rx=".5"/></g></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></g></symbol>
+  <symbol id="i-compartilhar" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.2 10.8 7.6-4.4M8.2 13.2l7.6 4.4"/></g></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/></g></symbol>
+  <symbol id="i-externo" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></g></symbol>
+  <symbol id="i-dado" viewBox="0 0 24 24"><g fill="currentColor"><rect x="3" y="3" width="18" height="18" rx="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="8" cy="8" r="1.6"/><circle cx="16" cy="8" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="8" cy="16" r="1.6"/><circle cx="16" cy="16" r="1.6"/></g></symbol>
+  <symbol id="i-ouvir" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></g></symbol>
+  <symbol id="i-parar" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"/></symbol>
+  <symbol id="i-pessoa" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></g></symbol>
+</svg>
+
+<script src="assets/vendor/qrcode.min.js" defer></script>
+<script src="trabalhos.js" defer></script>
+<script src="app.js" defer></script>
+</body>
+</html>

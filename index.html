@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600;1,700;1,800&display=swap">
-<link rel="stylesheet" href="styles.css?v=20261104h">
+<link rel="stylesheet" href="styles.css?v=20261104j">
 <script>try{if(localStorage.getItem('ppgean:contraste')==='alto')document.documentElement.dataset.contraste='alto'}catch(e){}</script>
 </head>
 <body>
@@ -77,6 +77,7 @@
   <form id="filtros" class="filtros" aria-label="Filtros da biblioteca" onsubmit="return false">
     <div class="faixa">
       <div class="filtros-linha">
+        <button type="button" class="btn filtros-abrir" id="filtros-abrir" aria-expanded="false"><svg class="ico" aria-hidden="true"><use href="#i-filtro"/></svg>Filtros<span class="filtros-n" id="filtros-n" hidden></span></button>
         <fieldset class="segmentos">
           <legend>Turma</legend>
           <label><input type="radio" name="turma" value="" checked><span>Todas</span></label>
@@ -218,7 +219,8 @@
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
   <symbol id="i-busca" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="m20 20-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
   <symbol id="i-grade" viewBox="0 0 24 24"><g fill="currentColor"><rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/></g></symbol>
-  <symbol id="i-lista" viewBox="0 0 24 24"><g fill="currentColor"><rect x="3" y="4" width="5" height="5" rx="1"/><rect x="10" y="5.5" width="11" height="2" rx="1"/><rect x="3" y="15" width="5" height="5" rx="1"/><rect x="10" y="16.5" width="11" height="2" rx="1"/></g></symbol>
+  <symbol id="i-filtro" viewBox="0 0 24 24"><path d="M4 7h16M7 12h10M10 17h4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+  <symbol id="i-lista"viewBox="0 0 24 24"><g fill="currentColor"><rect x="3" y="4" width="5" height="5" rx="1"/><rect x="10" y="5.5" width="11" height="2" rx="1"/><rect x="3" y="15" width="5" height="5" rx="1"/><rect x="10" y="16.5" width="11" height="2" rx="1"/></g></symbol>
   <symbol id="i-fechar" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
   <symbol id="i-esq" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-dir" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
@@ -238,9 +240,9 @@
 </svg>
 
 <script src="assets/vendor/qrcode.min.js" defer></script>
-<script src="trabalhos.js?v=20261104h" defer></script>
-<script src="sugestoes-ia.js?v=20261104h" defer></script>
-<script src="ia.js?v=20261104h" defer></script>
-<script src="app.js?v=20261104h" defer></script>
+<script src="trabalhos.js?v=20261104j" defer></script>
+<script src="sugestoes-ia.js?v=20261104j" defer></script>
+<script src="ia.js?v=20261104j" defer></script>
+<script src="app.js?v=20261104j" defer></script>
 </body>
 </html>

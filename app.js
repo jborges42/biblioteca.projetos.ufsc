@@ -296,10 +296,10 @@
 
   function cardHTML(w, i) {
     const tema = temaPorId[w.temas[0]];
-    return `<li class="card st-${w.status}" data-id="${w.id}" style="--i:${Math.min(i, 18)};view-transition-name:c-${w.id}"><article>`
-      + `<div class="capa">${capaCartao(w)}<span class="selo nivel-${w.nivel === 'Doutorado' ? 'd' : 'm'}">${w.nivel}</span></div>`
+    return `<li class="card st-${w.status}" data-id="${w.id}" style="--i:${Math.min(i, 18)}"><article>`
+      + `<div class="capa">${capaCartao(w)}<span class="selo nivel-${w.nivel === 'Doutorado' ? 'd' : 'm'}">${w.nivel}</span>${window.PPGEAN_IA?.tem(w.id) ? `<span class="selo-ia" title="Inclui simulação de como a IA pode ajudar">${icone('ia')}IA</span>` : ''}</div>`
       + `<div class="card-corpo"><p class="card-meta"><span class="meta-nivel">${w.nivel} · </span>Ingresso ${w.ingresso}${tema ? ` · ${esc(tema.rotulo)}` : ''}</p>`
-      + `<h3 class="card-titulo"><a class="card-link" href="#/${w.id}">${w.titulo || 'Título em definição'}</a></h3>`
+      + `<h3 class="card-titulo"><a class="card-link" href="#/${w.id}">${w.titulo || `Título em definição<span class="sr-only"> · ${esc(w.autor)}</span>`}</a></h3>`
       + `<p class="card-autor">${esc(w.autor)}</p><p class="card-status s-${w.status}">${STATUS[w.status]}</p></div></article></li>`;
   }
 
@@ -327,15 +327,20 @@
     $('#contagem').innerHTML = visiveis.length === total ? `<strong>${total}</strong> projetos` : `<strong>${visiveis.length}</strong> de ${total} projetos`;
     $('#limpar').hidden = !(f.q || f.turma || f.nivel || f.resumo || f.temas.length);
   }
-  const comTransicao = fn => (document.startViewTransition && movimento.matches ? document.startViewTransition(fn) : fn());
-
+  // Filtros re-renderizam com a animação de entrada dos cards (sem View Transition: ela engolia cliques rápidos)
   form.addEventListener('change', e => {
     if (e.target.name === 'visao') store.set('visao', e.target.value);
-    comTransicao(() => render(!document.startViewTransition));
+    render(true);
   });
   busca.addEventListener('input', () => render());
   busca.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); elEstantes.scrollIntoView({ behavior: movimento.matches ? 'smooth' : 'auto' }); } });
-  form.addEventListener('reset', () => setTimeout(() => { aplicarVisao(); comTransicao(() => render(!document.startViewTransition)); }));
+  form.addEventListener('reset', () => setTimeout(() => {
+    aplicarVisao();
+    render(true);
+    // o botão "Limpar filtros" some depois do clique: devolve o foco a um controle visível
+    const f = document.activeElement;
+    if (!f || f === document.body || f.closest('[hidden]')) form.querySelector('input[name="turma"]:checked').focus();
+  }));
   elEstantes.addEventListener('toggle', e => { const d = e.target; if (d.matches?.('details.estante')) { if (d.open) fechadas.delete(d.dataset.key); else fechadas.add(d.dataset.key); } }, true);
   function aplicarVisao() { const r = form.querySelector(`input[name="visao"][value="${store.get('visao') || 'grade'}"]`); if (r) r.checked = true; }
 
@@ -382,10 +387,6 @@
     if (alvo) { e.preventDefault(); alvo.focus({ preventScroll: true }); alvo.closest('.card').scrollIntoView({ block: 'nearest', behavior: movimento.matches ? 'smooth' : 'auto' }); }
   });
 
-  addEventListener('keydown', e => {
-    if (e.key !== '/' || e.ctrlKey || e.metaKey || e.altKey || dlg.open || /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement?.tagName)) return;
-    e.preventDefault(); busca.focus(); busca.select();
-  });
 
   // ---------- Destaque e números ----------
   // Destaque: começa no projeto definido em trabalhos.js ("destaque"); "Sortear outro" passeia pelos que têm resumo.
@@ -396,13 +397,13 @@
     if (!w) { $('#destaque').hidden = true; return; }
     destaqueAtual = w;
     const el = $('#destaque'), temResumo = w.status === 'resumo';
-    const trecho = temResumo ? esc(semTags(w.resumo[0])) : `Projeto de ${w.nivel === 'Doutorado' ? 'tese' : 'dissertação'} em desenvolvimento. O título já consta na lista oficial do PPGEAN; o resumo será publicado em breve.`;
+    const trecho = temResumo ? w.resumo[0] : `Projeto de ${w.nivel === 'Doutorado' ? 'tese' : 'dissertação'} em desenvolvimento. O título já consta na lista oficial do PPGEAN; o resumo será publicado em breve.`;
     el.innerHTML = `<a class="destaque-capa capa" href="#/${w.id}" tabindex="-1" aria-hidden="true">${capa(w, 640, 328)}<span class="destaque-rotulo">Em destaque</span></a>`
       + `<div class="destaque-txt"><p class="meta">${w.nivel} · Ingresso ${w.ingresso}</p><h2><a href="#/${w.id}">${w.titulo}</a></h2><p class="autor">${esc(w.autor)}</p><p class="trecho">${trecho}</p>`
       + `<div class="acoes"><a class="btn primario" href="#/${w.id}">${icone('doc')}${temResumo ? 'Ler resumo' : 'Ver projeto'}</a><button type="button" class="btn" id="sortear">${icone('dado')}Sortear outro</button></div></div>`;
     if (animar) { el.classList.remove('trocando'); void el.offsetWidth; el.classList.add('trocando'); }
   }
-  $('#destaque').addEventListener('click', e => { if (e.target.closest('#sortear')) { mostrarDestaque(true); $('#sortear').focus(); } });
+  $('#destaque').addEventListener('click', e => { if (e.target.closest('#sortear')) { mostrarDestaque(true); $('#sortear').focus(); avisar(`Em destaque: ${destaqueAtual.tituloTxt}`); } });
 
   function numeros() {
     const n = [['Projetos', trabalhos.length], ['Mestrado', trabalhos.filter(w => w.nivel === 'Mestrado').length], ['Doutorado', trabalhos.filter(w => w.nivel === 'Doutorado').length], ['Com resumo', comResumo.length]];
@@ -416,8 +417,8 @@
 
   // ---------- Leitor (projeto expandido na mesma tela) ----------
   const dlg = $('#leitor'), aviso = $('#aviso'), tituloPagina = document.title;
-  let atual = null, empilhado = false, focoOrigem = null;
-  const enderecoPublico = /^https?:$/.test(location.protocol) && !/^(localhost|127\.|0\.0\.0\.0|\[::1\])/.test(location.hostname) && window.top === window.self;
+  let atual = null, focoOrigem = null, navLista = null;
+  const enderecoPublico = /^https?:$/.test(location.protocol) && !/^(localhost|127\.|0\.0\.0\.0|\[::1\]|10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)|\.local$/.test(location.hostname) && window.top === window.self;
   let alvoQR = store.get('qr-alvo') || (enderecoPublico ? 'portfolio' : 'oficial');
   let fs = Math.min(24, Math.max(14, +store.get('fs') || 17));
   const vozOK = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
@@ -442,11 +443,11 @@
     if (w.status === 'resumo') {
       const palavras = w.resumo.map(semTags).join(' ').split(/\s+/).filter(Boolean).length;
       h += `<div class="leitura-barra"><span class="tempo">${icone('doc')}≈ ${Math.max(1, Math.round(palavras / 200))} min de leitura · ${palavras} palavras</span><span class="ajustes">`
-        + (vozOK ? `<button type="button" class="btn mini" data-acao="ouvir" aria-pressed="false">${icone('ouvir')}Ouvir</button>` : '')
+        + (vozOK ? `<button type="button" class="btn mini" data-acao="ouvir">${icone('ouvir')}Ouvir</button>` : '')
         + `<button type="button" class="btn mini" data-acao="fonte-menos" aria-label="Diminuir o texto">A−</button><button type="button" class="btn mini" data-acao="fonte-mais" aria-label="Aumentar o texto">A+</button></span></div>`
         + `<h3>Resumo</h3>${w.resumo.map(p => `<p>${p}</p>`).join('')}`;
     } else if (w.status === 'titulo') {
-      h += `<div class="aviso-status">${icone('doc')}<p><strong>Resumo em breve.</strong> O PPGEAN já divulgou o título deste projeto, mas o resumo ainda não foi publicado. O QR Code e os links ao lado levam à lista oficial da turma.</p></div>`;
+      h += `<div class="aviso-status">${icone('doc')}<p><strong>Resumo em breve.</strong> O PPGEAN já divulgou o título deste projeto, mas o resumo ainda não foi publicado.</p></div>`;
     } else {
       h += `<div class="aviso-status">${icone('doc')}<p><strong>Projeto em definição.</strong> Na lista oficial do PPGEAN, o título deste projeto de ${w.nivel === 'Doutorado' ? 'tese' : 'dissertação'} ainda consta como “a definir”.</p></div>`;
     }
@@ -461,6 +462,10 @@
     const outros = trabalhos.filter(o => o !== w && norm(o.autor) === norm(w.autor));
     if (outros.length) h += `<div class="relacionados">${outros.map(o => `<p><strong>${esc(w.autor)}</strong> também está nesta biblioteca: <a href="#/${o.id}">${o.nivel} · ingresso ${o.ingresso}${o.titulo ? ` — ${o.titulo}` : ' (projeto em definição)'}</a></p>`).join('')}</div>`;
     $('#leitor-texto').innerHTML = h;
+    // Recursos opcionais: uma falha aqui nunca deve impedir a leitura do projeto
+    try { window.PPGEAN_IA?.montar($('#leitor-ia'), w, { soTitulo: w.status !== 'resumo' }); } catch (err) { console.error('Simulação de IA indisponível:', err); }
+    if (w.status === 'a-definir') { const el = $('#leitor-ia'); el.hidden = false; el.innerHTML = `<section class="ia ia-vazia"><p class="ia-selo">${icone('ia')}Como a IA pode ajudar</p><p class="ia-ideia">Quando o tema deste projeto for definido, a biblioteca vai sugerir aqui uma simulação de como a inteligência artificial pode apoiar a pesquisa.</p></section>`; }
+    try { montarLeap(w); } catch (err) { console.error('Bloco LeapSpace indisponível:', err); }
 
     let fontes = '';
     if (w.pdf) fontes += `<a class="btn" href="${w.pdf}" target="_blank" rel="noopener">${icone('doc')}Ver resumo original (PDF)${icone('externo')}</a>`;
@@ -471,6 +476,54 @@
     $$('#qr-alvo input').forEach(i => { i.checked = i.value === alvoQR; });
     atualizarQR();
   }
+
+  // ---------- LeapSpace (Elsevier, via CAPES) ----------
+  // Sem API e sem incorporação (X-Frame-Options), mas a caixa de pergunta aceita ?q=. "Especialistas",
+  // "Financiamento" e "Panorama" são perguntas em linguagem natural na mesma caixa; por isso cada projeto
+  // traz perguntas curtas e específicas (PT/EN, em sugestoes-ia.js) que a pessoa pode editar antes de enviar.
+  const LEAP = 'https://www.sciencedirect.com/leapspace?q=';
+  const LEAP_TIPOS = { panorama: 'Panorama do tema', evidencias: 'Evidências', ia: 'Validar a ideia de IA', especialistas: 'Especialistas', financiamento: 'Financiamento' };
+  const LEAP_ORDEM = Object.keys(LEAP_TIPOS);
+  const elLeap = $('#leitor-leap');
+  let leapPs = [], leapTipo = 'panorama', leapIdioma = store.get('leap-idioma') === 'en' ? 'en' : 'pt';
+  const leapAtualizar = () => { $('.leap-ir', elLeap).href = LEAP + encodeURIComponent($('#leap-pergunta').value.trim()); };
+  function leapEscolher(tipo) {
+    const p = leapPs.find(x => x.tipo === tipo) || leapPs[0];
+    if (!p) return;
+    leapTipo = p.tipo;
+    $('#leap-pergunta').value = p[leapIdioma] || p.pt;
+    $$('.leap-chip', elLeap).forEach(b => b.setAttribute('aria-pressed', String(b.dataset.tipo === leapTipo)));
+    leapAtualizar();
+  }
+  function montarLeap(w) {
+    const temIA = !!window.PPGEAN_IA?.tem?.(w.id);
+    leapPs = (window.PPGEAN_SUGESTOES_IA?.leapspace?.[w.id] || [])
+      .filter(p => LEAP_TIPOS[p.tipo] && (p.tipo !== 'ia' || temIA))
+      .sort((a, b) => LEAP_ORDEM.indexOf(a.tipo) - LEAP_ORDEM.indexOf(b.tipo));
+    elLeap.hidden = !leapPs.length;
+    if (!leapPs.length) { elLeap.innerHTML = ''; return; }
+    elLeap.innerHTML = `<section class="leap" aria-labelledby="leap-titulo"><div class="leap-cab"><span class="leap-ico" aria-hidden="true">${icone('busca')}</span>`
+      + `<div><h3 id="leap-titulo">Pergunte à literatura científica</h3><p>Pelo <strong>LeapSpace</strong>, assistente de IA da Elsevier disponível pela CAPES, que responde citando artigos e livros revisados por pares.</p></div></div>`
+      + `<div class="leap-chips" role="group" aria-label="Perguntas sugeridas para este projeto">${leapPs.map(p => `<button type="button" class="leap-chip" data-tipo="${p.tipo}" aria-pressed="false">${LEAP_TIPOS[p.tipo]}</button>`).join('')}</div>`
+      + `<label class="sr-only" for="leap-pergunta">Pergunta para o LeapSpace (pode ser editada)</label><textarea id="leap-pergunta" class="leap-caixa" rows="3" maxlength="600"></textarea>`
+      + `<div class="leap-acoes"><fieldset class="segmentos leap-idioma"><legend class="sr-only">Idioma da pergunta</legend>`
+      + ['pt', 'en'].map(l => `<label><input type="radio" name="leap-idioma" value="${l}"${l === leapIdioma ? ' checked' : ''}><span>${l === 'pt' ? 'Português' : 'English'}</span></label>`).join('')
+      + `</fieldset><div class="leap-botoes"><button type="button" class="btn primario leap-copiar">${icone('copiar')}Copiar pergunta</button>`
+      + `<a class="btn leap-ir" target="_blank" rel="noopener">Abrir o LeapSpace${icone('externo')}</a></div></div>`
+      + `<p class="leap-nota"><strong>Como usar:</strong> copie a pergunta, abra o LeapSpace e cole-a na caixa de pergunta (Ctrl+V ou ⌘+V). Requer login institucional: CAFe, pelo <a href="https://www.periodicos.capes.gov.br/" target="_blank" rel="noopener">Portal de Periódicos CAPES</a>. A pesquisa aprofundada do LeapSpace consome créditos; ative-a lá, se quiser. Respostas geradas por IA: confira as fontes citadas.</p></section>`;
+    leapEscolher(leapPs[0].tipo);
+    // Ponte: da simulação ilustrativa para a evidência real
+    if (leapPs.some(p => p.tipo === 'ia')) $('#leitor-ia .ia')?.insertAdjacentHTML('beforeend', `<p class="ia-ponte"><button type="button" class="btn mini" data-acao="leap-ia">${icone('busca')}Isso já foi feito? Pergunte à literatura</button></p>`);
+  }
+  elLeap.addEventListener('click', e => {
+    const chip = e.target.closest('.leap-chip');
+    if (chip) { leapEscolher(chip.dataset.tipo); return; }
+    const copiar = e.target.closest('.leap-copiar');
+    if (copiar) { copiarTexto($('#leap-pergunta').value.trim(), copiar, 'Pergunta copiada. Abra o LeapSpace e cole na caixa de pergunta (Ctrl+V ou ⌘+V).'); return; }
+    if (e.target.closest('.leap-ir')) copiarTexto($('#leap-pergunta').value.trim(), null, 'Pergunta copiada: depois de entrar no LeapSpace, cole-a na caixa de pergunta.');
+  });
+  elLeap.addEventListener('input', e => { if (e.target.id === 'leap-pergunta') leapAtualizar(); });
+  elLeap.addEventListener('change', e => { if (e.target.name === 'leap-idioma') { leapIdioma = e.target.value; store.set('leap-idioma', leapIdioma); leapEscolher(leapTipo); } });
 
   function atualizarQR() {
     const w = atual, url = urlQR(w);
@@ -483,13 +536,15 @@
     dica.classList.toggle('alerta', local);
   }
 
-  const listaNav = () => (visiveis.includes(atual) ? visiveis : ordenar(trabalhos.slice(), 'estantes'));
+  // A lista de Anterior/Próximo fica fixa enquanto o leitor está aberto
+  const listaNav = () => (navLista?.includes(atual) ? navLista : (navLista = visiveis.includes(atual) ? visiveis.slice() : ordenar(trabalhos.slice(), 'estantes')));
   function atualizarNav() {
     const L = listaNav(), i = L.indexOf(atual), ant = L[i - 1], prox = L[i + 1];
-    [[$('#nav-ant'), ant, 'anterior'], [$('#nav-prox'), prox, 'seguinte']].forEach(([b, o, nome]) => {
+    [[$('#nav-ant'), ant, 'Anterior'], [$('#nav-prox'), prox, 'Próximo']].forEach(([b, o, nome]) => {
+      if (!o && document.activeElement === b) $('#leitor-titulo').focus();
       b.disabled = !o;
       b.title = o ? (o.tituloTxt || `${o.autor} (projeto em definição)`) : '';
-      b.setAttribute('aria-label', o ? `Projeto ${nome}: ${o.tituloTxt || o.autor}` : `Não há projeto ${nome}`);
+      b.setAttribute('aria-label', o ? `${nome}: ${o.tituloTxt || o.autor}` : `${nome}: não há mais projetos`);
     });
     $('#nav-pos').textContent = `${i + 1} de ${L.length}`;
   }
@@ -500,6 +555,7 @@
     $('#leitor-rolagem').scrollTop = 0;
     document.title = `${w.tituloTxt || w.autor} · ${tituloPagina}`;
     if (dlg.open) ['.leitor-hero-txt', '#leitor-texto'].forEach(s => { const el = $(s, dlg); el.classList.remove('trocando'); void el.offsetWidth; el.classList.add('trocando'); });
+    if (dlg.open && !dlg.contains(document.activeElement)) $('#leitor-titulo').focus(); // o botão focado foi recriado
   }
   const naTela = el => { const b = el?.getBoundingClientRect(); return !!b && b.width > 0 && b.bottom > 0 && b.top < innerHeight; };
   const podeTransicao = el => !!document.startViewTransition && movimento.matches && naTela(el);
@@ -507,38 +563,46 @@
   function abrir(w, capaOrigem) {
     if (dlg.open) { if (w !== atual) trocar(w); return; }
     focoOrigem = document.activeElement;
-    const mostrar = () => { trocar(w); dlg.showModal(); };
+    const mostrar = () => { trocar(w); dlg.append(aviso); dlg.showModal(); };
     if (!podeTransicao(capaOrigem)) return mostrar();
     const hero = $('#leitor-capa');
     capaOrigem.style.viewTransitionName = 'capa-ativa';
-    document.startViewTransition(() => { capaOrigem.style.viewTransitionName = ''; mostrar(); hero.style.viewTransitionName = 'capa-ativa'; })
-      .finished.finally(() => { hero.style.viewTransitionName = ''; });
+    const vt = document.startViewTransition(() => { capaOrigem.style.viewTransitionName = ''; mostrar(); hero.style.viewTransitionName = 'capa-ativa'; });
+    vt.ready.catch(() => {}); // abortada (ex.: janela redimensionada): o leitor abre mesmo assim
+    vt.finished.finally(() => { hero.style.viewTransitionName = ''; });
   }
   function fechar() {
     if (!dlg.open) return;
     const hero = $('#leitor-capa'), capaCard = $(`.card[data-id="${atual.id}"] .capa`);
     if (!podeTransicao(capaCard)) return dlg.close();
     hero.style.viewTransitionName = 'capa-ativa';
-    document.startViewTransition(() => { hero.style.viewTransitionName = ''; dlg.close(); capaCard.style.viewTransitionName = 'capa-ativa'; })
-      .finished.finally(() => { capaCard.style.viewTransitionName = ''; });
+    const vt = document.startViewTransition(() => { hero.style.viewTransitionName = ''; dlg.close(); capaCard.style.viewTransitionName = 'capa-ativa'; });
+    vt.ready.catch(() => {});
+    vt.finished.finally(() => { capaCard.style.viewTransitionName = ''; });
   }
   function irPara(delta) {
     const L = listaNav(), w = L[L.indexOf(atual) + delta];
     if (!w) return;
-    history.replaceState(null, '', '#/' + w.id);
+    history.replaceState(history.state, '', '#/' + w.id);
     trocar(w);
   }
 
   dlg.addEventListener('cancel', e => { e.preventDefault(); fechar(); });
-  dlg.addEventListener('click', e => { if (e.target === dlg) fechar(); });
+  let cliqueNoFundo = false; // só fecha se o clique começou no véu (não ao arrastar uma seleção de texto para fora)
+  dlg.addEventListener('pointerdown', e => { cliqueNoFundo = e.target === dlg; });
+  dlg.addEventListener('click', e => { if (e.target === dlg && cliqueNoFundo) fechar(); });
   dlg.addEventListener('close', () => {
     pararVoz();
-    if (location.hash.startsWith('#/')) { if (empilhado) history.back(); else history.replaceState(null, '', location.pathname + location.search); }
-    empilhado = false;
+    window.PPGEAN_IA?.parar();
+    navLista = null;
+    // a entrada criada ao abrir é marcada com { leitor: 1 }: voltar a remove sem duplicar o histórico
+    if (location.hash.startsWith('#/')) { if (history.state?.leitor) history.back(); else history.replaceState(null, '', location.pathname + location.search); }
     document.title = tituloPagina;
     if (aviso.parentNode !== document.body) document.body.append(aviso);
-    const alvo = (atual && $(`.card[data-id="${atual.id}"] .card-link`)) || focoOrigem;
-    if (alvo?.isConnected && alvo.offsetParent) alvo.focus();
+    // volta ao botão que abriu (ex.: o destaque); se navegou para outro projeto, vai ao card dele
+    const card = atual && $(`.card[data-id="${atual.id}"] .card-link`);
+    const alvo = [focoOrigem?.getAttribute?.('href') === `#/${atual?.id}` && focoOrigem, card, focoOrigem].find(el => el?.isConnected && el.offsetParent);
+    alvo?.focus();
   });
   $('#leitor-fechar').addEventListener('click', fechar);
   $('#nav-ant').addEventListener('click', () => irPara(-1));
@@ -557,6 +621,12 @@
     const acoes = {
       'copiar-qr': () => copiarQR(b), 'baixar-qr': baixarQR, etiqueta, 'copiar-link': () => copiarLink(b), compartilhar,
       ouvir, 'fonte-mais': () => mudarFonte(1), 'fonte-menos': () => mudarFonte(-1),
+      'leap-ia': () => {
+        leapEscolher('ia');
+        const rol = $('#leitor-rolagem'); // rola só o painel do leitor
+        rol.scrollTo({ top: rol.scrollTop + elLeap.getBoundingClientRect().top - rol.getBoundingClientRect().top - 12, behavior: movimento.matches ? 'smooth' : 'auto' });
+        $('#leap-pergunta').focus({ preventScroll: true });
+      },
     };
     acoes[b.dataset.acao]?.();
   });
@@ -568,16 +638,16 @@
     const w = porId.get(a.getAttribute('href').slice(2));
     if (!w) return;
     e.preventDefault();
-    if (dlg.open) { history.replaceState(null, '', '#/' + w.id); trocar(w); return; }
-    history.pushState(null, '', '#/' + w.id);
+    if (dlg.open) { history.replaceState(history.state, '', '#/' + w.id); trocar(w); return; }
+    history.pushState({ leitor: 1 }, '', '#/' + w.id);
     abrir(w, (a.closest('.card') || a.closest('.destaque'))?.querySelector('.capa'));
-    empilhado = true;
   });
   function rota() {
     const m = location.hash.match(/^#\/([\w-]+)$/), w = m && porId.get(m[1]);
     if (w) abrir(w);
     else if (dlg.open) dlg.close();
   }
+  history.scrollRestoration = 'manual'; // quem decide a rolagem ao fechar o leitor é o foco
   addEventListener('popstate', rota);
   addEventListener('hashchange', rota);
 
@@ -636,18 +706,19 @@
     }
   }
   async function baixarQR() { baixar(await paraBlob(qrCanvas(urlQR(atual))), nomeArquivo(atual, 'qrcode')); avisar('QR Code baixado em PNG de alta resolução.'); }
-  async function copiarLink(btn) {
-    const url = urlQR(atual);
-    try { await navigator.clipboard.writeText(url); }
+  async function copiarTexto(texto, btn, msg) {
+    try { await navigator.clipboard.writeText(texto); }
     catch {
-      const t = document.createElement('textarea');
-      t.value = url; t.setAttribute('readonly', ''); t.style.cssText = 'position:fixed;top:0;opacity:0';
-      dlg.append(t); t.select();
-      const ok = document.execCommand('copy'); t.remove();
-      if (!ok) { avisar('Não foi possível copiar automaticamente. Selecione o endereço abaixo do QR Code.'); return; }
+      const t = document.createElement('textarea'), foco = document.activeElement;
+      t.value = texto; t.setAttribute('readonly', ''); t.style.cssText = 'position:fixed;top:0;opacity:0';
+      (dlg.open ? dlg : document.body).append(t); t.select();
+      const ok = document.execCommand('copy'); t.remove(); foco?.focus();
+      if (!ok) { avisar('Não foi possível copiar automaticamente: selecione o texto e use Ctrl+C (⌘+C).'); return false; }
     }
-    confirmar(btn, 'Link copiado!'); avisar('Link copiado.');
+    confirmar(btn, 'Copiado!'); avisar(msg);
+    return true;
   }
+  const copiarLink = btn => copiarTexto(urlQR(atual), btn, 'Link copiado.');
   const btnCompartilhar = $('[data-acao="compartilhar"]');
   if (navigator.share) btnCompartilhar.hidden = false;
   async function compartilhar() {
@@ -717,7 +788,6 @@
   function estadoVoz(on) {
     const b = $('[data-acao="ouvir"]', dlg);
     if (!b) return;
-    b.setAttribute('aria-pressed', String(on));
     b.innerHTML = on ? `${icone('parar')}Parar` : `${icone('ouvir')}Ouvir`;
   }
   function pararVoz() { if (vozOK && (speechSynthesis.speaking || speechSynthesis.pending)) speechSynthesis.cancel(); estadoVoz(false); }

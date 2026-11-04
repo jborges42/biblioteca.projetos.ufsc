@@ -740,7 +740,7 @@ window.PPGEAN_SUGESTOES_IA = {
    "id": "2026-m-esther-escarrone-pereira",
    "motor": "agrupamento",
    "titulo": "IA para revelar perfis do sistema tradicional do pinhão",
-   "ideia": "Estudos sobre sistemas agrícolas tradicionais costumam combinar entrevistas e levantamentos da vegetação. A IA poderia agrupar as propriedades por esses dados, como a participação do pinhão na renda e a cobertura florestal, revelando perfis e quais deles se associam a uma floresta mais conservada.",
+   "ideia": "Estudos sobre sistemas agrícolas tradicionais costumam combinar entrevistas e levantamentos da vegetação. A IA poderia agrupar as propriedades por esses dados, como a participação do pinhão na renda e a cobertura florestal, revelando perfis e se mais renda do pinhão acompanha mais floresta em pé.",
    "tecnica": "Agrupamento não supervisionado (k-means) para tipologia de propriedades",
    "beneficio": "Uma tipologia objetiva das propriedades, que ajuda a entender quando o pinhão favorece a floresta em pé e a orientar o apoio ao sistema tradicional.",
    "item": "propriedade rural",
@@ -854,8 +854,8 @@ window.PPGEAN_SUGESTOES_IA = {
    "id": "2026-m-luiza-franco-de-souza",
    "motor": "regressao",
    "titulo": "IA para prever o ¹⁵N do solo a partir de espectros",
-   "ideia": "Em solos, o espectro registra, entre outros atributos, a composição da matéria orgânica e a argila, que costumam se relacionar com o ¹⁵N. A IA poderia aprender essas relações com amostras também analisadas em laboratório e prever o ¹⁵N de novas amostras de solo agrícola só pelo espectro.",
-   "tecnica": "Rede neural convolucional 1D (aprendizado profundo) sobre os espectros",
+   "ideia": "O espectro do solo reflete a composição da matéria orgânica e a argila, que costumam se relacionar com o ¹⁵N. A IA poderia aprender essas relações com amostras também analisadas em laboratório e prever o ¹⁵N de novas amostras só pelo espectro, testando se supera a regressão PLS, o método clássico.",
+   "tecnica": "Rede neural convolucional 1D sobre os espectros, comparada à regressão PLS",
    "beneficio": "Analisar muito mais amostras de solo ao custo de uma leitura espectral, reservando as análises isotópicas para calibrar e conferir o modelo.",
    "entradas": [
     {
@@ -912,8 +912,8 @@ window.PPGEAN_SUGESTOES_IA = {
   {
    "id": "2026-m-renzo-sebastian-huerta-jimenez",
    "motor": "regressao",
-   "titulo": "IA para estimar a fixação biológica de N pelo espectro da folha",
-   "ideia": "O ¹⁵N foliar usado para estimar a fixação biológica costuma ser medido por espectrometria de massas, de custo alto. A IA poderia aprender com folhas já analisadas a prever o ¹⁵N pelo espectro óptico e, comparando-o ao de plantas não fixadoras, estimar quanto do N da planta veio da atmosfera.",
+   "titulo": "IA para estimar a fixação de nitrogênio pelo espectro da folha",
+   "ideia": "O ¹⁵N foliar, usado para estimar a fixação biológica, costuma ser medido por espectrometria de massas, de custo alto. A IA poderia aprender com folhas já analisadas a prever o ¹⁵N pelo espectro óptico e, comparando-o ao de plantas não fixadoras, estimar quanto do nitrogênio da planta veio do ar.",
    "tecnica": "Random Forest sobre espectros foliares, com importância das bandas",
    "beneficio": "Estimar a fixação biológica em muito mais plantas, com leituras rápidas e baratas, usando as análises isotópicas só para calibrar o modelo.",
    "entradas": [
@@ -948,7 +948,7 @@ window.PPGEAN_SUGESTOES_IA = {
   {
    "id": "2026-m-vitoria-cozer",
    "motor": "mapa",
-   "titulo": "IA para mapear resiliência e resistência da floresta",
+   "titulo": "IA para mapear a resiliência e a resistência da floresta",
    "ideia": "Muitos estudos de resiliência florestal medem por satélite quanto o vigor do dossel cai num evento extremo, como uma estiagem (resistência), e quão rápido ele volta (resiliência). A IA poderia mapear essas respostas e estimar o peso de cada fator biótico, abiótico e antropogênico.",
    "tecnica": "Gradient boosting (XGBoost) com SHAP sobre séries de imagens de satélite",
    "beneficio": "Mostrar em que trechos a Floresta Ombrófila Mista é mais vulnerável e quais fatores mais pesam, orientando onde priorizar a conservação e a restauração.",
@@ -1507,30 +1507,30 @@ window.PPGEAN_SUGESTOES_IA = {
    },
    {
     "tipo": "ia",
-    "pt": "Quais estudos já usaram aprendizado de máquina gradient boosting (XGBoost) para prever a recuperação do solo, da fauna edáfica e da vegetação na restauração ecológica?",
+    "pt": "Quais estudos já usaram gradient boosting (XGBoost) para prever a recuperação do solo, da fauna edáfica e da vegetação na restauração ecológica?",
     "en": "Which studies have used gradient boosting (XGBoost) to predict the recovery of soil, soil fauna and vegetation in ecological restoration?"
    }
   ],
   "2026-m-ana-claudia-miozzo": [
    {
     "tipo": "panorama",
-    "en": "What are the main research themes on orchid bees (Euglossini) and stingless bees (Meliponini) in fragmented landscapes?",
-    "pt": "Quais são os principais temas de pesquisa sobre abelhas Euglossini e Meliponini em paisagens fragmentadas?"
+    "pt": "Quais são os principais temas de pesquisa sobre abelhas Euglossini e Meliponini em paisagens fragmentadas?",
+    "en": "What are the main research themes on orchid bees (Euglossini) and stingless bees (Meliponini) in fragmented landscapes?"
    },
    {
     "tipo": "evidencias",
-    "en": "How do landscape composition and habitat fragmentation affect the richness and abundance of orchid bees and stingless bees?",
-    "pt": "Como a composição da paisagem e a fragmentação do habitat afetam a riqueza e a abundância de abelhas-das-orquídeas e de abelhas sem ferrão?"
+    "pt": "Como a composição da paisagem e a fragmentação do habitat afetam a riqueza e a abundância de abelhas-das-orquídeas e de abelhas sem ferrão?",
+    "en": "How do landscape composition and habitat fragmentation affect the richness and abundance of orchid bees and stingless bees?"
    },
    {
     "tipo": "especialistas",
-    "en": "Which authors and research groups are studying landscape effects on orchid bee and stingless bee communities today?",
-    "pt": "Quais autores e grupos de pesquisa estudam hoje os efeitos da paisagem sobre comunidades de abelhas-das-orquídeas e abelhas sem ferrão?"
+    "pt": "Quais autores e grupos de pesquisa estudam hoje os efeitos da paisagem sobre comunidades de abelhas-das-orquídeas e abelhas sem ferrão?",
+    "en": "Which authors and research groups are studying landscape effects on orchid bee and stingless bee communities today?"
    },
    {
     "tipo": "financiamento",
-    "en": "Who could help fund a study on how fragmented landscapes shape native orchid bee and stingless bee communities in Brazil?",
-    "pt": "Quem poderia financiar um estudo sobre como paisagens fragmentadas moldam comunidades de abelhas nativas Euglossini e Meliponini no Brasil?"
+    "pt": "Quem poderia financiar um estudo sobre como paisagens fragmentadas moldam comunidades de abelhas nativas Euglossini e Meliponini no Brasil?",
+    "en": "Who could help fund a study on how fragmented landscapes shape native orchid bee and stingless bee communities in Brazil?"
    },
    {
     "tipo": "ia",
@@ -1589,7 +1589,7 @@ window.PPGEAN_SUGESTOES_IA = {
    {
     "tipo": "ia",
     "pt": "Quais estudos usaram Random Forest para prever o efeito de bioinsumos no crescimento de mudas de espécies nativas da Mata Atlântica?",
-    "en": "Which studies have used random forests to predict how biofertilizers or microbial inoculants affect the growth of native Atlantic Forest seedlings?"
+    "en": "Which studies have used Random Forest to predict the effect of bio-inputs on the growth of native Atlantic Forest seedlings?"
    }
   ],
   "2026-m-esther-escarrone-pereira": [
@@ -1622,23 +1622,23 @@ window.PPGEAN_SUGESTOES_IA = {
   "2026-m-frank-marcelo-da-silva-araujo": [
    {
     "tipo": "panorama",
-    "en": "What are the main research themes on pinhão production and natural regeneration of Araucaria angustifolia?",
-    "pt": "Quais são os principais temas de pesquisa sobre a produção de pinhão e a regeneração natural de Araucaria angustifolia?"
+    "pt": "Quais são os principais temas de pesquisa sobre a produção de pinhão e a regeneração natural de Araucaria angustifolia?",
+    "en": "What are the main research themes on pinhão production and natural regeneration of Araucaria angustifolia?"
    },
    {
     "tipo": "evidencias",
-    "en": "How do pinhão production and harvesting affect the natural regeneration of Araucaria angustifolia on rural properties?",
-    "pt": "Como a produção e a coleta de pinhão afetam a regeneração natural de Araucaria angustifolia em propriedades rurais?"
+    "pt": "Como a produção e a coleta de pinhão afetam a regeneração natural de Araucaria angustifolia em propriedades rurais?",
+    "en": "How do pinhão production and harvesting affect the natural regeneration of Araucaria angustifolia on rural properties?"
    },
    {
     "tipo": "especialistas",
-    "en": "Which authors and research groups are studying pinhão production and natural regeneration of Araucaria angustifolia today?",
-    "pt": "Quais autores e grupos de pesquisa estudam hoje a produção de pinhão e a regeneração natural de Araucaria angustifolia?"
+    "pt": "Quais autores e grupos de pesquisa estudam hoje a produção de pinhão e a regeneração natural de Araucaria angustifolia?",
+    "en": "Which authors and research groups are studying pinhão production and natural regeneration of Araucaria angustifolia today?"
    },
    {
     "tipo": "financiamento",
-    "en": "Who could help fund a study on pinhão yield and Araucaria angustifolia regeneration on rural properties in the Santa Catarina highlands?",
-    "pt": "Quem poderia financiar um estudo sobre a safra de pinhão e a regeneração da araucária em propriedades rurais da serra catarinense?"
+    "pt": "Quem poderia financiar um estudo sobre a safra de pinhão e a regeneração da araucária em propriedades rurais da serra catarinense?",
+    "en": "Who could help fund a study on pinhão yield and Araucaria angustifolia regeneration on rural properties in the Santa Catarina highlands?"
    },
    {
     "tipo": "ia",
@@ -1696,8 +1696,8 @@ window.PPGEAN_SUGESTOES_IA = {
    },
    {
     "tipo": "ia",
-    "pt": "Quais estudos usaram aprendizado de máquina com dados climáticos para prever a produção de dálias ou outras flores de corte por época de plantio?",
-    "en": "Which studies have used machine learning with weather data to predict dahlia or other cut-flower yield across planting dates?"
+    "pt": "Quais estudos usaram XGBoost com dados meteorológicos para prever a produção de dálias ou outras flores de corte por época de plantio?",
+    "en": "Which studies have used XGBoost with weather data to predict dahlia or other cut-flower yield across planting dates?"
    }
   ],
   "2026-m-luiza-franco-de-souza": [
@@ -1723,8 +1723,8 @@ window.PPGEAN_SUGESTOES_IA = {
    },
    {
     "tipo": "ia",
-    "pt": "Quais estudos usaram aprendizado de máquina ou redes neurais em espectros de solo para prever o ¹⁵N em solos agrícolas?",
-    "en": "Which studies have applied machine learning or neural networks to soil spectra to predict 15N in agricultural soils?"
+    "pt": "Quais estudos usaram redes neurais convolucionais 1D em espectros de solo para prever o 15N em solos agrícolas?",
+    "en": "Which studies have used one-dimensional convolutional neural networks on soil spectra to predict 15N in agricultural soils?"
    }
   ],
   "2026-m-paula-tonatto-carlos-pereira": [
@@ -1777,8 +1777,8 @@ window.PPGEAN_SUGESTOES_IA = {
    },
    {
     "tipo": "ia",
-    "pt": "Quais estudos usaram espectroscopia óptica e aprendizado de máquina para prever o ¹⁵N foliar e estimar a fixação biológica de nitrogênio?",
-    "en": "Which studies have used optical spectroscopy and machine learning to predict leaf 15N and estimate biological nitrogen fixation?"
+    "pt": "Quais estudos usaram Random Forest em espectros foliares para prever o ¹⁵N foliar e estimar a fixação biológica de nitrogênio?",
+    "en": "Which studies have used Random Forest on leaf spectra to predict leaf ¹⁵N and estimate biological nitrogen fixation?"
    }
   ],
   "2026-m-vitoria-cozer": [

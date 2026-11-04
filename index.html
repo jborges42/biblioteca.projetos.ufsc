@@ -2,15 +2,15 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Biblioteca de Projetos · PPGEAN · UFSC</title>
 <meta name="description" content="Biblioteca interativa dos projetos de dissertação e tese dos ingressantes de 2025 e 2026 do Programa de Pós-Graduação em Ecossistemas Agrícolas e Naturais (PPGEAN) da UFSC, campus Curitibanos.">
 <meta name="theme-color" content="#1659bf">
 <link rel="icon" href="assets/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&display=swap">
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600;1,700;1,800&display=swap">
+<link rel="stylesheet" href="styles.css?v=20261104h">
 <script>try{if(localStorage.getItem('ppgean:contraste')==='alto')document.documentElement.dataset.contraste='alto'}catch(e){}</script>
 </head>
 <body>
@@ -57,12 +57,11 @@
     <div class="hero-txt">
       <p class="sobretitulo">Biblioteca de projetos · ingressantes 2025 e 2026</p>
       <h1 id="hero-titulo">Pesquisas em ecossistemas agrícolas e naturais</h1>
-      <p class="hero-lead">Do campo nativo às araucárias, do solo às abelhas: explore os projetos de dissertação e tese em desenvolvimento no PPGEAN. Escolha uma capa para ler o resumo e gerar um QR&nbsp;Code que leva o trabalho a qualquer lugar.</p>
+      <p class="hero-lead">Do campo nativo às araucárias, do solo às abelhas: explore os projetos de dissertação e tese em desenvolvimento no PPGEAN. Escolha uma capa para ler o resumo, ver como a inteligência artificial poderia apoiar cada pesquisa e gerar um QR&nbsp;Code que leva o projeto a qualquer lugar.</p>
       <div class="busca" role="search">
         <label class="sr-only" for="busca">Buscar projetos</label>
         <svg class="ico" aria-hidden="true"><use href="#i-busca"/></svg>
         <input id="busca" name="q" form="filtros" type="search" placeholder="Busque por tema, título, autor, orientador…" autocomplete="off" spellcheck="false">
-        <kbd class="busca-atalho" aria-hidden="true">/</kbd>
       </div>
       <dl class="numeros" id="numeros"></dl>
     </div>
@@ -175,12 +174,16 @@
       <div class="leitor-capa capa" id="leitor-capa"></div>
       <div class="leitor-hero-txt">
         <p class="leitor-selos" id="leitor-selos"></p>
-        <h2 id="leitor-titulo" tabindex="-1" autofocus></h2>
+        <h2 id="leitor-titulo" tabindex="-1" autofocus aria-live="polite"></h2>
         <p class="leitor-autor" id="leitor-autor"></p>
       </div>
     </header>
     <div class="leitor-corpo">
-      <article class="leitor-texto" id="leitor-texto" aria-label="Resumo do projeto"></article>
+      <div class="leitor-principal">
+        <article class="leitor-texto" id="leitor-texto" aria-label="Resumo do projeto"></article>
+        <div id="leitor-ia" hidden></div>
+        <div id="leitor-leap" hidden></div>
+      </div>
       <aside class="leitor-qr" aria-labelledby="qr-titulo">
         <h3 id="qr-titulo"><svg class="ico" aria-hidden="true"><use href="#i-qr"/></svg> Acesso por QR&nbsp;Code</h3>
         <fieldset class="segmentos qr-alvo" id="qr-alvo">
@@ -231,10 +234,13 @@
   <symbol id="i-ouvir" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></g></symbol>
   <symbol id="i-parar" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"/></symbol>
   <symbol id="i-pessoa" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></g></symbol>
+  <symbol id="i-ia" viewBox="0 0 24 24"><path d="M12 2l1.8 5.4L19 9l-5.2 1.6L12 16l-1.8-5.4L5 9l5.2-1.6zM19 14l.9 2.6 2.6.9-2.6.9L19 21l-.9-2.6-2.6-.9 2.6-.9zM5 15l.7 1.8 1.8.7-1.8.7L5 20l-.7-1.8-1.8-.7 1.8-.7z" fill="currentColor"/></symbol>
 </svg>
 
 <script src="assets/vendor/qrcode.min.js" defer></script>
-<script src="trabalhos.js" defer></script>
-<script src="app.js" defer></script>
+<script src="trabalhos.js?v=20261104h" defer></script>
+<script src="sugestoes-ia.js?v=20261104h" defer></script>
+<script src="ia.js?v=20261104h" defer></script>
+<script src="app.js?v=20261104h" defer></script>
 </body>
 </html>
